@@ -1,0 +1,33 @@
+Printing Press Wagtail Website
+    Components: 
+        Stream Blocks
+        Html Templates
+        CSS
+        JS
+        Settings
+
+Base:
+    - 
+
+Navbar:
+    - 
+
+Blocks:
+    - Intro block ( h1, p)
+    - Product list ( div cards -> img, h2, p)
+    - Icon with block ( h2, list [ icon, h3, p ] )
+    - Richtext
+    - List Block (h2, ul<li>)
+
+Page Type:
+    - Flex Page
+    - Form Page
+
+Product: 
+- Flyers            flyer           392501
+- Booklets          booklet cd dvd  392561
+- Business cards    businesscard    392500
+- Letterheads       letterheads     392510
+- Stickers          stickers        392507
+- Postcards         postcards       392502
+- Posters           poster          392511

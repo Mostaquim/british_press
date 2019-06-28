@@ -1,0 +1,20 @@
+<div class="container">
+    <h2 class="text-xs-center" >{{self.h2}}</h2>
+    <div class="container-fluid">
+        <div class="row my-4">
+            {% for b in self.icon_block %}
+                <div class="col-sm-6">
+                    <ul class="featured-list featured-list-bordered">
+                        <li class="mb-5">
+                            <div class="featured-list-icon">
+                                <span class="icon {{b.icon}}"></span>
+                            </div>
+                            <h3>{{b.h3}}</h3>
+                            <p>{{b.p}}</p>
+                        </li>
+                    </ul>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>

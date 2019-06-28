@@ -1,0 +1,14 @@
+{% load wagtailimages_tags %}
+<div class="container my-5">
+    <div id="product-list">
+        {% for p in self.products %}
+        <div class="product-item">
+            <a href="{{p.url}}" class="product-item-a">
+                {% image p.image fill-200x200 as img  %}
+                <img class="product-item-img" src="{{img.url}}" alt="{{img.alt}}">
+                <h3>{{p.title}}</h3>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+</div>

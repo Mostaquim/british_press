@@ -1,0 +1,40 @@
+from wagtail.core.models import Page, Orderable
+from django.db import models
+from wagtail.admin.edit_handlers import FieldPanel, InlinePanel
+from wagtail.images.edit_handlers import ImageChooserPanel
+from wagtail.core.blocks import CharBlock
+from modelcluster.fields import ParentalKey
+from wagtail.core.fields import RichTextField
+
+
+class CatalogPage(Page):
+    name = models.CharField(null=False, max_length=200)
+    image = models.ForeignKey(
+        'wagtailimages.Image',
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name='+'
+    )
+
+    api_value = models.CharField(null=True, max_length=200)
+
+    list_header = models.TextField(null=True,max_length=500)
+
+    content = RichTextField(null=True)
+
+    content_panels = Page.content_panels + [
+        FieldPanel('api_value'),
+        FieldPanel('name'),
+        ImageChooserPanel('image'),
+        FieldPanel('list_header'),
+        InlinePanel('list_item', label="List"),
+        FieldPanel('content')
+    ]
+
+    template = "form/catalog.html"
+
+
+class ListItem(Orderable):
+    page = ParentalKey(CatalogPage, related_name='list_item')
+    text = models.CharField(null=True, max_length=500)
+    panels = [FieldPanel('text')]

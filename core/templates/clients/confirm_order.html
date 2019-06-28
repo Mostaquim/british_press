@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extrastyle %}
+<link rel="stylesheet" href="{% static 'assets/dropzone/dropzone.css' %}">
+{% endblock extrastyle %}
+
+{% block content %}
+<div class="container text-xs-center">
+    <div id="myId" class="dropzone"></div>
+    <button class="btn btn-success my-5" >Place Order</button>
+</div>
+{% endblock content %}
+
+
+{% block extrajs %}
+<script src="{% static 'assets/dropzone/dropzone.js' %}"></script>
+<script>
+    var drop = $("div#myId").dropzone({
+        dictDefaultMessage: "Upload your digital content here",
+        paramName: "file",
+        url: '/api/file_upload/',
+        headers: {
+            'X-CSRFToken': csrftoken
+        },
+        success: function (e) {
+            console.log(e)
+        }
+    });
+
+
+    drop.on("addedfile", function (file) {
+        file.previewElement.addEventListener("click", function () {
+            myDropzone.removeFile(file);
+        });
+    });
+
+
+</script>
+{% endblock extrajs %}
