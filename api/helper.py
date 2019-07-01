@@ -1,4 +1,5 @@
 import os
+import uuid
 from clients.models import Orders
 from django.conf import settings
 
@@ -14,7 +15,10 @@ def create_item_id(formData):
         i+=1
 
 def handle_uploaded_file(f):
-    main_path = os.path.join(settings.UPLOAD_DIR,  f.name)
+    ext = f.name.split('.')[1]
+    fname = uuid.uuid4().hex + '.' + ext
+    main_path = os.path.join(settings.UPLOAD_DIR,  fname)
     with open(main_path, 'wb+') as dest:
         for chunk in f.chunks():
             dest.write(chunk)
+    return fname

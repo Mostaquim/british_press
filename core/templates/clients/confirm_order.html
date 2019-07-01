@@ -8,7 +8,10 @@
 {% block content %}
 <div class="container text-xs-center">
     <div id="myId" class="dropzone"></div>
-    <button class="btn btn-success my-5" >Place Order</button>
+    <form id="form" method="POST" >
+        {% csrf_token %}
+        <button type="submit" class="btn btn-success my-5" >Place Order</button>
+    </form>
 </div>
 {% endblock content %}
 
@@ -16,15 +19,29 @@
 {% block extrajs %}
 <script src="{% static 'assets/dropzone/dropzone.js' %}"></script>
 <script>
+    var csrftoken = "{{csrf}}";
     var drop = $("div#myId").dropzone({
         dictDefaultMessage: "Upload your digital content here",
         paramName: "file",
         url: '/api/file_upload/',
+        addRemoveLinks: true,
+        maxFiles: 1,
         headers: {
             'X-CSRFToken': csrftoken
         },
         success: function (e) {
-            console.log(e)
+            file = e.xhr.responseText
+            hid_input = document.createElement('input')
+            $(hid_input).attr('type', 'hidden')
+            $(hid_input).attr('name','uploaded_file')
+            $(hid_input).addClass('hid_input')
+            $(hid_input).val(file)
+            $('#form').append(hid_input)
+        },
+        removedfile: function(file){
+            $('.hid_input').remove()
+            var _ref;
+            return (_ref = file.previewElement) != null ? _ref.parentNode.removeChild(file.previewElement) : void 0;   
         }
     });
 

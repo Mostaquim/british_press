@@ -1,4 +1,5 @@
 import json
+import hashlib
 from django.shortcuts import render, HttpResponse, Http404
 from django.conf import settings
 from requests import Session
@@ -6,6 +7,11 @@ from .client import SoapClient
 from zeep.helpers import serialize_object
 from .helper import create_item_id, handle_uploaded_file
 from clients.models import Orders
+from .decorator import json_response_cache_page_decorator
+
+from django.core.cache import cache
+
+from django.utils.encoding import force_bytes, iri_to_uri
 
 # Create your views here.
 
@@ -13,6 +19,21 @@ from clients.models import Orders
 def catalog_api(request):
     if request.is_ajax():
         if request.method == 'POST':
+            # CREATE THE CACHE KEY
+            cache_key = 'json_response_cache:{}'.format(
+                hashlib.md5(request.body).hexdigest()
+            )
+            print(cache_key)
+
+            content = cache.get(cache_key)
+
+            if content is not None:
+                return HttpResponse(
+                    content,
+                    content_type='application/json'
+                )
+
+            data = request.body
             data = json.loads(request.body.decode('utf-8'))
             if 'selected' in data:
                 selected = {
@@ -35,7 +56,9 @@ def catalog_api(request):
             )
 
         if response.response.responseCode:
-            return HttpResponse(json.dumps(serialize_object(response.productList)), content_type="application/json")
+            content = json.dumps(serialize_object(response.productList))
+            cache.set(cache_key, content, settings.API_CACHE_TIME)
+            return HttpResponse(content, content_type="application/json")
 
 
 def create_product(request):
@@ -81,9 +104,13 @@ def create_product(request):
                             phone_number=formData['phoneNumber'],
                             phone_prefix=formData['phonePrefix'],
                             item_id=item_identifier,
-                            comment=formData['comment']
+                            comment=formData['comment'],
+                            company=formData['company']
                         )
 
+                        order.save()
+
+                        order.data = json.dumps(data['selected']) 
                         order.save()
 
                         return HttpResponse(order.id)
@@ -95,7 +122,7 @@ def create_product(request):
 def file_upload(request):
     if request.method == 'POST':
         f = request.FILES['file']
-        handle_uploaded_file(f)
+        fname = handle_uploaded_file(f)
 
-        return HttpResponse('asd')
-    return HttpResponse('axx')
+        return HttpResponse(fname)
+    raise Http404()
