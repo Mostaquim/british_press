@@ -39,7 +39,8 @@
 
 {% block extrajs %}
 <script>
-  var product_value = "{{self.api_value}}"
+var product_value = "{{self.api_value}}"
+var csrftoken = "{{csrf}}";
 </script>
 <script src="{% static 'js/catalog.js' %}"></script>
 {% endblock extrajs %}

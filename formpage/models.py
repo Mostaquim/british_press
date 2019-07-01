@@ -5,6 +5,7 @@ from wagtail.images.edit_handlers import ImageChooserPanel
 from wagtail.core.blocks import CharBlock
 from modelcluster.fields import ParentalKey
 from wagtail.core.fields import RichTextField
+from django.middleware.csrf import get_token
 
 
 class CatalogPage(Page):
@@ -32,6 +33,11 @@ class CatalogPage(Page):
     ]
 
     template = "form/catalog.html"
+
+    def get_context(self, request, *args, **kwargs):
+        context = super().get_context(request, *args, **kwargs)
+        context['csrf'] = get_token(request)
+        return context
 
 
 class ListItem(Orderable):
