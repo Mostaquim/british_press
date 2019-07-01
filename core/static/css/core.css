@@ -1,130 +1,196 @@
 div#product-list {
-    display: flex;
-    flex: 1 1 200px;
-    flex-wrap: wrap;
-    margin-top: 30px;
+  display: flex;
+  flex: 1 1 200px;
+  flex-wrap: wrap;
+  margin-top: 30px;
 }
+
 .product-item {
-    display: flex;
-    flex: 1 0 230px;
-    margin: 20px;
+  display: flex;
+  flex: 1 0 230px;
+  margin: 20px;
 }
+
 a.product-item-a:hover {
-    text-decoration: unset;
-    box-shadow: 0px 0px 1px 2px #c5c5c5;
+  text-decoration: unset;
+  box-shadow: 0px 0px 1px 2px #c5c5c5;
 }
+
 a.product-item-a {
-    display: flex;
-    flex-direction: column;
-    margin: auto;
-    text-align: center;
-    color: #000;
-    transition: .5s;
-    border-radius: 20px;
-    border: 1px solid;
-    padding: 10px;
-    width: 235px;
-    height: 235px;
+  display: flex;
+  flex-direction: column;
+  margin: auto;
+  text-align: center;
+  color: #000;
+  transition: .5s;
+  border-radius: 20px;
+  border: 1px solid;
+  padding: 10px;
+  width: 235px;
+  height: 235px;
 }
 
 #catalogpage-ul {
-    margin: auto 0;
-    font-size: 24px;
-    list-style: none;
+  margin: auto 0;
+  font-size: 24px;
+  list-style: none;
 }
+
 img.product-item-img {
-    width: 150px;
-    margin: auto;
+  width: 150px;
+  margin: auto;
 }
+
 .lds-hourglass {
-    display: inline-block;
-    position: relative;
-    width: 64px;
-    height: 64px;
-  }
-  .lds-hourglass:after {
-    content: " ";
-    display: block;
-    border-radius: 50%;
-    width: 0;
-    height: 0;
-    margin: 6px;
-    box-sizing: border-box;
-    border: 26px solid #eee;
-    border-color: #eee transparent #eee transparent;
-    animation: lds-hourglass 1.2s infinite;
-  }
-  @keyframes lds-hourglass {
-    0% {
-      transform: rotate(0);
-      animation-timing-function: cubic-bezier(0.55, 0.055, 0.675, 0.19);
-    }
-    50% {
-      transform: rotate(900deg);
-      animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
-    }
-    100% {
-      transform: rotate(1800deg);
-    }
-  }
-  
-  div#loader div {
-    top: 50%;
-    left: 50%;
+  display: inline-block;
+  position: relative;
+  width: 64px;
+  height: 64px;
 }
+
+.lds-hourglass:after {
+  content: " ";
+  display: block;
+  border-radius: 50%;
+  width: 0;
+  height: 0;
+  margin: 6px;
+  box-sizing: border-box;
+  border: 26px solid #eee;
+  border-color: #eee transparent #eee transparent;
+  animation: lds-hourglass 1.2s infinite;
+}
+
+@keyframes lds-hourglass {
+  0% {
+    transform: rotate(0);
+    animation-timing-function: cubic-bezier(0.55, 0.055, 0.675, 0.19);
+  }
+  50% {
+    transform: rotate(900deg);
+    animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+  }
+  100% {
+    transform: rotate(1800deg);
+  }
+}
+
+div#loader div {
+  top: 50%;
+  left: 50%;
+}
+
 div#loader {
-    display: none;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: #00000038;
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #00000038;
 }
+
 span.error {
   font-size: 12px;
   color: #f00;
   display: none;
 }
+
 .form-group.error span.error {
   display: block;
 }
+
 div#page-div {
   padding: 5px;
   border: 3px solid #eee;
 }
+
 .dropzone, .dropzone * {
-box-sizing: border-box; }
+  box-sizing: border-box;
+}
 
 .dropzone {
-position: relative; }
+  position: relative;
+}
+
 .dropzone .dz-preview {
   position: relative;
   display: inline-block;
   width: 120px;
-  margin: 0.5em; }
-  .dropzone .dz-preview .dz-progress {
-    display: block;
-    height: 15px;
-    border: 1px solid #aaa; }
-    .dropzone .dz-preview .dz-progress .dz-upload {
-      display: block;
-      height: 100%;
-      width: 0;
-      background: green; }
-  .dropzone .dz-preview .dz-error-message {
-    color: red;
-    display: none; }
-  .dropzone .dz-preview.dz-error .dz-error-message, .dropzone .dz-preview.dz-error .dz-error-mark {
-    display: block; }
-  .dropzone .dz-preview.dz-success .dz-success-mark {
-    display: block; }
-  .dropzone .dz-preview .dz-error-mark, .dropzone .dz-preview .dz-success-mark {
-    position: absolute;
-    display: none;
-    left: 30px;
-    top: 30px;
-    width: 54px;
-    height: 58px;
-    left: 50%;
-    margin-left: -27px; }
+  margin: 0.5em;
+}
+
+.dropzone .dz-preview .dz-progress {
+  display: block;
+  height: 15px;
+  border: 1px solid #aaa;
+}
+
+.dropzone .dz-preview .dz-progress .dz-upload {
+  display: block;
+  height: 100%;
+  width: 0;
+  background: green;
+}
+
+.dropzone .dz-preview .dz-error-message {
+  color: red;
+  display: none;
+}
+
+.dropzone .dz-preview.dz-error .dz-error-message, .dropzone .dz-preview.dz-error .dz-error-mark {
+  display: block;
+}
+
+.dropzone .dz-preview.dz-success .dz-success-mark {
+  display: block;
+}
+
+.dropzone .dz-preview .dz-error-mark, .dropzone .dz-preview .dz-success-mark {
+  position: absolute;
+  display: none;
+  left: 30px;
+  top: 30px;
+  width: 54px;
+  height: 58px;
+  left: 50%;
+  margin-left: -27px;
+}
+
+.form-with-icon select {
+  width: calc(90% - 40px);
+  margin-right: 8px;
+  display: inline-block;
+}
+
+.form-icons {
+  display: none;
+}
+
+.valid .valid-icon {
+  display: inline;
+}
+
+.caution .caution-icon {
+  display: inline;
+}
+
+.loading .loading-icon {
+  display: inline;
+}
+
+.error .error-icon {
+  display: inline;
+}
+.loading select {
+  border: 1px solid;
+}
+.error select {
+  border: 1px solid #F44336;
+}
+.valid select {
+  border: 1px solid #4CAF50;
+}
+.caution select {
+  border: 1px solid #FF9800;
+}

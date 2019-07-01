@@ -29,18 +29,15 @@ function get_catalog_data(selected) {
         contentType: 'application/json',
         data: JSON.stringify(data),
         beforeSend: function (xhr, settings) {
-            start_loader()
             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
                 xhr.setRequestHeader("X-CSRFToken", csrftoken);
             }
         },
         success: function (data) {
-            hide_loader()
             generate_from(data)
             view_price(data.selected)
         }
     })
-
 }
 
 function view_price(data) {
@@ -57,12 +54,18 @@ function generate_select(e) {
     label.innerHTML = e.selectDescription
     $(label).attr('for', e.selectName)
     $(div).append(label)
+    var second_div = document.createElement('div')
+    second_div.className = 'form-with-icon'
     select = document.createElement('select')
     select.className = 'form-control catalog-form'
     select.id = e.selectName
     $(select).attr('name', e.selectName)
     $(select).on('change', function (e) {
         selected = pre_selcted
+        $(this).parent().removeClass('caution')
+        $(this).parent().removeClass('error')
+        $(this).parent().removeClass('valid')
+        $(this).parent().addClass('loading')
 
         $('.catalog-form').each(function () {
             val = $(this).val()
@@ -71,7 +74,7 @@ function generate_select(e) {
         })
         get_catalog_data(selected)
     })
-
+    valid = 0
     e.optionList.forEach(function (opt) {
         option = document.createElement('option')
         option.value = opt.optionName
@@ -80,12 +83,41 @@ function generate_select(e) {
             text = opt.optionName
         }
         if (selected[e.selectName] == opt.optionName) {
+            valid = 1
             $(option).attr('selected', 'true')
+        } else {
         }
         option.innerHTML = text
         $(select).append(option)
     })
-    $(div).append(select)
+    if(valid){
+        $(second_div).addClass('valid')
+    } else{
+        $(second_div).addClass('caution')
+    }
+    $(second_div).append(select)
+
+    var loading_img = document.createElement('img')
+    loading_img.src = '/static/assets/images/loader.gif'
+    loading_img.className = 'form-icons loading-icon'
+    $(second_div).append(loading_img)
+
+    var error_img = document.createElement('img')
+    error_img.src = '/static/assets/images/cross.png'
+    error_img.className = 'form-icons error-icon'
+    $(second_div).append(error_img)
+
+    var valid_img = document.createElement('img')
+    valid_img.src = '/static/assets/images/tick.png'
+    valid_img.className = 'form-icons valid-icon'
+    $(second_div).append(valid_img)
+
+    var caution_img = document.createElement('img')
+    caution_img.src = '/static/assets/images/caution.png'
+    caution_img.className = 'form-icons caution-icon'
+    $(second_div).append(caution_img)
+
+    $(div).append(second_div)
     return div
 }
 
@@ -186,7 +218,6 @@ $('#next-1').click(function () {
             contentType: 'application/json',
             data: JSON.stringify(data),
             beforeSend: function (xhr, settings) {
-                start_loader()
                 if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
                     xhr.setRequestHeader("X-CSRFToken", csrftoken);
                 }

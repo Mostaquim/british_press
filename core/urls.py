@@ -11,6 +11,7 @@ from search import views as search_views
 
 from api import urls as api_urls
 from clients.views import confirm_order
+from formpage.views import test_form
 
 urlpatterns = [
     url(r'^django-admin/', admin.site.urls),
@@ -21,6 +22,7 @@ urlpatterns = [
     url(r'^search/$', search_views.search, name='search'),
 
     path('confirm_order/<int:pk>',confirm_order, name='confirm_order'),
+    path('test/', test_form),
     # For anything not caught by a more specific rule above, hand over to
     # Wagtail's page serving mechanism. This should be the last pattern in
     # the list:
