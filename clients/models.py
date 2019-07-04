@@ -5,7 +5,7 @@ from django.db import models
 
 class OrderManager(models.Manager):
     def create_new_order(
-        self, 
+        self,
         email,  first_name, last_name, salutation, phone_prefix,
         company, house_number, street, zip_code, city,
         phone_number, item_id, comment
@@ -44,13 +44,14 @@ class OrderManager(models.Manager):
             order_id=None,
             comment=comment
         )
+
         order.save()
         return order
 
 
 class Clients(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    company= models.CharField(max_length=255,null=True)
+    company = models.CharField(max_length=255, null=True)
     salutation = models.CharField(max_length=5, null=True)
     phone_prefix = models.CharField(max_length=10, null=True)
     phone_number = models.CharField(max_length=20, null=True)

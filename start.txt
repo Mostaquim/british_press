@@ -31,3 +31,21 @@ Product:
 - Stickers          stickers        392507
 - Postcards         postcards       392502
 - Posters           poster          392511
+
+
+Order Flow:
+    - Create Product From Catalog
+    - Login/ Guest
+    - Payment
+    - Enter Shipping Address
+    - Proofing
+
+
+The goal is to create a manage.py command, that will fetch data from the api
+The form page will work as, it will first load data from the cached api
+
+manage.py cached
+
+get api 
+
+

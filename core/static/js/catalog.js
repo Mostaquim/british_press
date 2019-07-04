@@ -145,7 +145,6 @@ function generate_from(data) {
     $('#catalog-form').append(even_div)
 }
 
-get_catalog_data()
 
 $('.first-modal-form').on('change', function (e) {
     $(this).parent().removeClass('error')

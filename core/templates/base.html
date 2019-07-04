@@ -1,4 +1,4 @@
-{% load static %}
+{% load static wagtailsettings_tags %}
 <html lang="en">
 
 <head>
@@ -14,57 +14,61 @@
 
 <body>
     <header>
-        <div class="container pt-4">
-            <nav class="navbar navbar-light navbar-toggleable-sm navbar-static-top text-uppercase app-navbar mb-5">
-                <button class="navbar-toggler navbar-toggler-right hidden-md-up" type="button" data-toggle="collapse"
-                    data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
-                    aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <a class="navbar-brand mr-auto" href="../">
-                    <span>British Press</span>
-                </a>
-                <div class="collapse navbar-collapse" id="navbarResponsive">
-                    <ul class="nav navbar-nav ml-auto">
-                        <li class="nav-item ">
-                            <a class="nav-link" href="..//index.html">StartUp</a>
-                        </li>
-                        <li class="nav-item active">
-                            <a class="nav-link" href="../minimal/index.html">Minimal</a>
-                        </li>
-                        <li class="nav-item ">
-                            <a class="nav-link" href="../bold/index.html">Bold</a>
-                        </li>
-                        <li class="nav-item ">
-                            <a class="nav-link" href="../docs/index.html">Docs</a>
-                        </li>
-                    </ul>
+        <div id="top-head">
+            <div class="container">
+                <nav id="top-head-nav">
+                    <div id="top-head-slogan">
+                        <p>A Cool Slogan!!</p>
+                    </div>
+                    <div id="top-head-navs">
+                        <a href="" class="top-head-a">Home</a>
+                        <a href="" class="top-head-a">About Us</a>
+                        <a href="" class="top-head-a">Contact Us</a>
+                    </div>
+                </nav>
+            </div>
+        </div>
+        <div id="second-head">
+            <div class="container d-flex justify-content-between">
+                <div id="logo-div">
+                    <img src="{% static 'assets/images/logo.png' %}" alt="">
                 </div>
-                <!--/.nav-collapse -->
-            </nav>
+                <div id="contact-div">
+                    <p id="second-head-phone-label">Contact Us:</p>
+                    <p id="second-head-phone-number">000 0004444</p>
+                </div>
+            </div>
+        </div>
+        <div id="product-head">
+            <div class="container d-flex justify-content-between">
+                {% for product in settings.sitesettings.NavbarSetting.products %}
+                    {{product}}
+                {% endfor %}
+            </div>
+           
         </div>
     </header>
     <main>
         {% block content %}
         {% endblock content %}
     </main>
-    <footer>
-
+    <footer class="mt-5">
+        <div class="block block-inverse app-footer">
+            <div class="container">
+                <div class="row">
+                    
+                </div>
+            </div>
+        </div>
     </footer>
-
-{% block modal %}
-    
-{% endblock modal %}
-    
-
+    {% block modal %}
+    {% endblock modal %}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.15.0/umd/popper.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <script src="{% static 'js/core.js' %}"></script>
     {% block extrajs %}
     {% endblock extrajs %}
-  
-
 </body>
 
 </html>

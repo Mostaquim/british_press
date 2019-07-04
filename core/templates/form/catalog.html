@@ -1,23 +1,59 @@
 {% extends 'base.html' %}
 
-{% load wagtailimages_tags static %}
-
-
+{% load wagtailimages_tags static formfilter %}
 {% block content %}
-
 <div class="container  mb-5">
-  {% image self.image fill-200x200 as img %}
-  <div class="row">
-    <div class="col-sm-12 col-md-4 text-xs-center">
-      <img src="{{img.url}}" alt="{{img.alt}}">
-      <h1 class="text-uppercase">{{self.name}}</h1>
+  {% image self.image fill-400x300 as img %}
+  <div class="row bg-white pt-1">
+    <div class="col-sm-12 col-md-4">
+      <div class="form-page-card text-xs-center">
+        <img id="catalogpage-img" src="{{img.url}}" alt="{{img.alt}}">
+        <h1 id='catalogpage-h1' class="text-uppercase">{{self.name}}</h1>
+      </div>
+      <div id="catalog-desc">
+        <h2 id="catalogpage-h2">{{self.list_header}}</h2>
+        <ul id="catalogpage-ul">
+          {% for l in self.list_item.all %}
+          <li class="catalogpage-li">{{l.text}}</li>
+          {% endfor %}
+        </ul>
+      </div>
     </div>
-    <div class="col-sm-12 col-md-8 d-flex">
-      <ul id="catalogpage-ul">
-        {% for l in self.list_item.all %}
-        <li class="catalogpage-li">{{l.text}}</li>
+    <div class="col-sm-12 col-md-8 d-flex flex-column">
+      <div id="prices">
+        <div class="price-grid">
+          <p id="price-net-p">Net Price: <span class="price">$32.00</span></p>
+        </div>
+        <div class="price-grid">
+          <p id="price-gross-p">Gross Price: <span class="price">$32.00</span></p>
+        </div>
+        <div class="price-grid">
+          <p id="shipping-net-p">Shipping Net: <span class="price">$32.00</span></p>
+        </div>
+        <div class="price-grid">
+          <p id="shipping-gross-p">Shipping Gross: <span class="price">$32.00</span></p>
+        </div>
+      </div>
+      <div id="form-div">
+        {% for select in select_group  %}
+        {% if select.selectName != 'product' and select.optionList|length > 1 %}
+        <div class="form-group row">
+          <label class="col-sm-2" for="{{select.selectName}}">{{select.selectDescription|refine_name}}</label>
+          <div class="col-sm-10 form-with-icon">
+            <select class="form-control catalog-form" id="{{select.selectName}}" name="{{select.selectName}}">
+              {% for option in select.optionList  %}
+                <option value="{{ select.optionName }}">{{option.optionTranslations|array_filter}}</option>
+              {% endfor %}
+            </select>
+            <img src="/static/assets/images/loader.gif" class="form-icons loading-icon">
+            <img src="/static/assets/images/cross.png" class="form-icons error-icon">
+            <img src="/static/assets/images/tick.png" class="form-icons valid-icon">
+            <img src="/static/assets/images/caution.png" class="form-icons caution-icon">
+          </div>
+        </div>
+        {% endif %}
         {% endfor %}
-      </ul>
+      </div>
     </div>
   </div>
   <div class="row">
@@ -26,10 +62,6 @@
       </div>
     </div>
     <div class="col-sm-12 col-md-4">
-      <p id="price-net-p"></p>
-      <p id="price-gross-p"></p>
-      <p id="shipping-net-p"></p>
-      <p id="shipping-gross-p"></p>
       <button class="btn btn-success" data-toggle="modal" data-target="#exampleModal" id="buy">Buy</button>
     </div>
   </div>
@@ -39,8 +71,8 @@
 
 {% block extrajs %}
 <script>
-var product_value = "{{self.api_value}}";
-var csrftoken = "{{csrf}}";
+  var product_value = "{{self.api_value}}";
+  var csrftoken = "{{csrf}}";
 </script>
 <script src="{% static 'js/catalog.js' %}"></script>
 {% endblock extrajs %}

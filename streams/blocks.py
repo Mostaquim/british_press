@@ -49,9 +49,6 @@ class TextBlock(blocks.StructBlock):
         template = "stream/text_block.html"
         label = "RichText"
 
-
-
-
 def get_all_fields():
     return [
         ('intro_block', IntroBlock()),
@@ -59,3 +56,14 @@ def get_all_fields():
         ('BlockWithIcon', BlockWithIcon()),
         ('Text', TextBlock()),
     ]
+
+
+class NavigationBlock(blocks.StructBlock):
+    name = blocks.CharBlock(required=False, help_text="Name")
+    pagefield = blocks.PageChooserBlock(
+        required=False, help_text="Select the page")
+
+    class Meta:
+        template = "streams/blocks/navbar.html"
+        icon = "plus"
+        label = "Nav"
