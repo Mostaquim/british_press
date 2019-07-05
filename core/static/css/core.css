@@ -348,11 +348,7 @@ li.catalogpage-li {
 div#catalog-desc {
   margin: 20px 0;
 }
-div#prices {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-}
+
 .price-grid {
   font-size: 18px;
 }
@@ -364,7 +360,7 @@ div#prices {
   justify-content: space-between;
   width: 100%;
   line-height: 30px;
-  margin-bottom: 5px;
+  margin-bottom: 25px;
 }
 .price-grid {
   font-size: 18px;
@@ -378,4 +374,14 @@ div#prices {
 
 div#form-div {
   margin-top: 15px;
+}
+
+div#catalog-form {
+  box-shadow: inset 0 0 0px 2px #03A9F4;
+  padding: 15px;
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: capitalize;
+  margin-bottom: 15px;
+  border-radius: 5px;
 }

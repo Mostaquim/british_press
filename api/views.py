@@ -13,7 +13,7 @@ from django.core.cache import cache
 
 from django.utils.encoding import force_bytes, iri_to_uri
 
-# Create your views here.
+from django.contrib.sessions.backends.db import SessionStore
 
 
 def catalog_api(request):
@@ -126,3 +126,11 @@ def file_upload(request):
 
         return HttpResponse(fname)
     raise Http404()
+
+
+def create_session(request):
+    s = SessionStore()
+    s['a'] = 'test'
+    
+    print(s.session_key)
+    return HttpResponse(s)

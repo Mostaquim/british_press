@@ -47,26 +47,52 @@ function view_price(data) {
     $('#shipping-gross-p').html('Shipping Gross: ' + data.shippingGross)
 }
 
+$('.catalog-form').on('change', function (e) {
+    selected = pre_selcted
+    $(this).parent().removeClass('caution')
+    $(this).parent().removeClass('error')
+    $(this).parent().removeClass('valid')
+    $(this).parent().addClass('loading')
+    $('.catalog-form').each(function () {
+        val = $(this).val()
+        name = $(this).attr("name")
+        selected[name] = val
+    })
+    get_catalog_data(selected)
+})
+
 function generate_select(e) {
     div = document.createElement('div')
-    div.className = 'form-group'
+    div.className = 'form-group row'
     label = document.createElement('label')
-    label.innerHTML = e.selectDescription
+    l = e.selectDescription.split('_')
+    a = []
+    l.forEach(function (e) {
+        if (e.length > 1) {
+            a.push(e.charAt(0).toUpperCase() + e.substring(1));
+        }
+    })
+
+    label.innerHTML = a.join(' ') + ":"
     $(label).attr('for', e.selectName)
+    $(label).addClass('col-sm-2')
     $(div).append(label)
     var second_div = document.createElement('div')
-    second_div.className = 'form-with-icon'
+    second_div.className = 'form-with-icon col-sm-10'
     select = document.createElement('select')
     select.className = 'form-control catalog-form'
     select.id = e.selectName
     $(select).attr('name', e.selectName)
+    $(select).click(function (e) {
+        console.log('asd')
+        $(this).removeClass('caution')
+    })
     $(select).on('change', function (e) {
         selected = pre_selcted
         $(this).parent().removeClass('caution')
         $(this).parent().removeClass('error')
         $(this).parent().removeClass('valid')
         $(this).parent().addClass('loading')
-
         $('.catalog-form').each(function () {
             val = $(this).val()
             name = $(this).attr("name")
@@ -90,9 +116,9 @@ function generate_select(e) {
         option.innerHTML = text
         $(select).append(option)
     })
-    if(valid){
+    if (valid) {
         $(second_div).addClass('valid')
-    } else{
+    } else {
         $(second_div).addClass('caution')
     }
     $(second_div).append(select)
@@ -122,108 +148,30 @@ function generate_select(e) {
 }
 
 function generate_from(data) {
-    var odd_div = document.createElement('div')
-    odd_div.id = 'odd_div'
-    odd_div.className = 'col-md-6'
-    var even_div = document.createElement('div')
-    even_div.className = 'col-md-6'
-    even_div.id = 'even_div'
     i = 0;
+    $('#catalog-form').empty()
     data.selectGroupList.forEach(function (e) {
-        if (e.selectName != 'product') {
+        console.log(e)
+        if (e.selectName != 'product' && e.optionList.length > 1) {
             select = generate_select(e)
-            if (i % 2) {
-                $(even_div).append(select)
-            } else {
-                $(odd_div).append(select)
-            }
-            i++;
+            $('#catalog-form').append(select)
         }
     })
-    $('#catalog-form').empty()
-    $('#catalog-form').append(odd_div)
-    $('#catalog-form').append(even_div)
 }
-
 
 $('.first-modal-form').on('change', function (e) {
     $(this).parent().removeClass('error')
 })
 
-$('#next-1').click(function () {
-    error = 0
-    $('.first-modal-form').each(function () {
 
-        if ($(this).val() == '') {
-            error = 1
-
-            $(this).parent().addClass('error')
-        } else {
-            $(this).parent().removeClass('error')
-            if ($(this).attr('name') == 'email') {
-                if (!testEmail.test($(this).val())) {
-                    $(this).parent().addClass('error')
-                    error = 1
-                }
-            }
-        }
-
-    })
-
-    if (!error) {
-        email = $('#email').val()
-        company = $('#company').val()
-        salutation = $('#salutation').val()
-        firstName = $('#first-name').val()
-        lastName = $('#last-name').val()
-        street = $('#street').val()
-        houseNumber = $('#house-number').val()
-        city = $('#city').val()
-        zipCode = $('#zip-code').val()
-        phonePrefix = $('#phone-prefix').val()
-        phoneNumber = $('#phone-number').val()
-        comment = $('#comment').val()
-
-        formData = {
-            'email': email,
-            'company': company,
-            'salutation': salutation,
-            'firstName': firstName,
-            'lastName': lastName,
-            'street': street,
-            'houseNumber': houseNumber,
-            'zipCode': zipCode,
-            'city': city,
-            'phonePrefix': phonePrefix,
-            'phoneNumber': phoneNumber,
-            'comment': comment
-        }
-
-        vals = pre_selcted
+$('#cart-button').click(function () {
+    selected = pre_selcted;
+    $('.catalog-form').each(function (e) {
         $('.catalog-form').each(function () {
-            val = $(this).val()
-            name = $(this).attr("name")
-            vals[name] = val
+            val = $(this).val();
+            name = $(this).attr("name");
+            selected[name] = val;
         })
-
-        data = {
-            'formData': formData,
-            'selected': vals
-        }
-
-        $.ajax({
-            method: 'POST',
-            url: '/api/create_product/',
-            contentType: 'application/json',
-            data: JSON.stringify(data),
-            beforeSend: function (xhr, settings) {
-                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
-                }
-            },
-            success: function (e) {
-                console.log(e)
-            }
-        });
-    }
-});
+    })
+    console.log(selected);
+})

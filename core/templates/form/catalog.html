@@ -2,9 +2,9 @@
 
 {% load wagtailimages_tags static formfilter %}
 {% block content %}
-<div class="container  mb-5">
+<div class="container">
   {% image self.image fill-400x300 as img %}
-  <div class="row bg-white pt-1">
+  <div class="row bg-white pt-1 pb-3">
     <div class="col-sm-12 col-md-4">
       <div class="form-page-card text-xs-center">
         <img id="catalogpage-img" src="{{img.url}}" alt="{{img.alt}}">
@@ -34,7 +34,7 @@
           <p id="shipping-gross-p">Shipping Gross: <span class="price">$32.00</span></p>
         </div>
       </div>
-      <div id="form-div">
+      <div id="catalog-form">
         {% for select in select_group  %}
         {% if select.selectName != 'product' and select.optionList|length > 1 %}
         <div class="form-group row">
@@ -42,7 +42,7 @@
           <div class="col-sm-10 form-with-icon">
             <select class="form-control catalog-form" id="{{select.selectName}}" name="{{select.selectName}}">
               {% for option in select.optionList  %}
-                <option value="{{ select.optionName }}">{{option.optionTranslations|array_filter}}</option>
+              <option value="{{ option.optionName }}">{{option.optionTranslations|array_filter}}</option>
               {% endfor %}
             </select>
             <img src="/static/assets/images/loader.gif" class="form-icons loading-icon">
@@ -53,16 +53,9 @@
         </div>
         {% endif %}
         {% endfor %}
+
       </div>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-sm-12 col-md-8">
-      <div class="row" id="catalog-form">
-      </div>
-    </div>
-    <div class="col-sm-12 col-md-4">
-      <button class="btn btn-success" data-toggle="modal" data-target="#exampleModal" id="buy">Buy</button>
+      <button id="cart-button" class="btn btn-lg btn-primary btn-block">Add To Cart</button>
     </div>
   </div>
 </div>
@@ -76,103 +69,3 @@
 </script>
 <script src="{% static 'js/catalog.js' %}"></script>
 {% endblock extrajs %}
-
-{% block modal %}
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-  aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Your Information</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <div class="form-group">
-          <label for="email">Email</label>
-          <input type="text" name="email" id="email" class="first-modal-form form-control">
-          <span class="error">A valid email address is required</span>
-        </div>
-        <div class="form-group">
-          <label for="company">Company</label>
-          <input type="text" name="company" id="company" class="first-modal-form form-control">
-          <span class="error">This Field Is Required</span>
-        </div>
-        <div class="row">
-          <div class="col-sm-12 col-md-3">
-            <div class="form-group">
-              <label for="salutation">Salutation</label>
-              <select name="salutation" id="salutation" class="first-modal-form form-control">
-                <option value="Mr." selected>Mr.</option>
-                <option value="Mrs.">Mrs.</option>
-              </select>
-            </div>
-          </div>
-          <div class="col-sm-12 col-md-9">
-            <div class="row">
-              <div class="form-group col-sm-12 col-md-6">
-                <label for="first-name">First Name</label>
-                <input type="text" name="first-name" id="first-name" class="first-modal-form form-control">
-                <span class="error">This Field Is Required</span>
-              </div>
-              <div class="form-group col-sm-12 col-md-6">
-                <label for="last-name">Last Name</label>
-                <input type="text" name="last-name" id="last-name" class="first-modal-form form-control">
-                <span class="error">This Field Is Required</span>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="form-group col-sm-12 col-md-6">
-            <label for="street">Street</label>
-            <input class="first-modal-form form-control" type="text" name="street" id="street">
-            <span class="error">This Field Is Required</span>
-          </div>
-          <div class="form-group col-sm-12 col-md-6">
-            <label for="house-number">House Number</label>
-            <input class="first-modal-form form-control" type="text" name="house-number" id="house-number">
-            <span class="error">This Field Is Required</span>
-          </div>
-        </div>
-        <div class="row">
-          <div class="form-group col-sm-12 col-md-6">
-            <label for="zip-code">Zip Code</label>
-            <input class="first-modal-form form-control" type="text" name="zip-code" id="zip-code">
-            <span class="error">This Field Is Required</span>
-          </div>
-          <div class="form-group col-sm-12 col-md-6">
-            <label for="city">City</label>
-            <input class="first-modal-form form-control" type="text" name="city" id="city">
-            <span class="error">This Field Is Required</span>
-          </div>
-        </div>
-        <div class="row">
-          <div class="form-group col-sm-3">
-            <label for="phone-prefix">Phone Prefix</label>
-            <input class="first-modal-form form-control" type="text" name="phone-prefix" id="phone-prefix">
-            <span class="error">This Field Is Required</span>
-          </div>
-          <div class="form-group col-sm-9">
-            <label for="phone-number">Phone Number</label>
-            <input class="first-modal-form form-control" type="text" name="phone-number" id="phone-number">
-            <span class="error">This Field Is Required</span>
-          </div>
-        </div>
-        <div class="form-group">
-          <div class="form-group">
-            <label for="comment">Comments</label>
-            <textarea name="comment" id="comment" class="first-modal-form form-control"></textarea>
-            <span class="error">This Field Is Required</span>
-          </div>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button id="next-1" type="button" class="btn btn-primary">Next</button>
-      </div>
-    </div>
-  </div>
-</div>
-{% endblock modal %}
