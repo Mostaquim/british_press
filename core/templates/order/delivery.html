@@ -1,0 +1,193 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+<div class="container">
+    <div id="order-header">
+        <span class="order-header__breadcrumb ">Your Order</span><span
+            class="order-header__breadcrumb oder-header__breadcrumb-active">Delivery Options</span><span
+            class="order-header__breadcrumb">Review</span><span class="order-header__breadcrumb">Checkout</span><span
+            class="order-header__breadcrumb">Complete</span>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-control">
+                <label for="">Select Delivery Address</label>
+                <select class="form-control address-form" data-type="delivery" name="address" id="delivery_address">
+                    {% for address in addresses  %}
+                    <option value="{{address.pk}}">{{address.street}},{{address.houseNumber}},{{address.company}}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div id="delivery_detail" class="address-detail-div">
+                {% if delivery_address %}
+                <h2>Delivery Address</h2>
+                <p><span class="address_head">Street: </span>{{delivery_address.street}}</p>
+                <p><span class="address_head">House number: </span>{{delivery_address.houseNumber}}</p>
+                <p><span class="address_head">Post Code: </span>{{delivery_address.zipcode}}</p>
+                <p><span class="address_head">City: </span>{{delivery_address.city}}</p>
+                <p><span class="address_head">Company: </span>{{delivery_address.company}}</p>
+                <p><span class="address_head">Phone Number: </span>{{delivery_address.phonePrefix}} {{delivery_address.phoneNumber}}</p>
+                {% endif %}
+            </div>
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg">Add New
+                Address</button>
+
+        </div>
+        <div class="col-md-6">
+            <div class="form-control">
+                <label for="">Select Billing Address</label>
+                <select class="form-control address-form" data-type="billing" name="address" id="billing_address">
+                    {% for address in addresses  %}
+                    <option value="{{address.pk}}">{{address.street}},{{address.houseNumber}},{{address.company}}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            {% if billing_address %}
+            <div id="billing_detail" class="address-detail-div">
+                <h2>Billing Address</h2>
+                <p><span class="address_head">Street: </span>{{billing_address.street}}</p>
+                <p><span class="address_head">House number: </span>{{billing_address.houseNumber}}</p>
+                <p><span class="address_head">Post Code: </span>{{billing_address.zipcode}}</p>
+                <p><span class="address_head">City: </span>{{billing_address.city}}</p>
+                <p><span class="address_head">Company: </span>{{billing_address.company}}</p>
+                <p><span class="address_head">Phone Number: </span>{{delivery_address.phonePrefix}} {{delivery_address.phoneNumber}}</p>
+            </div>
+            {% endif %}
+
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg">Add New
+                Address</button>
+        </div>
+    </div>
+
+    <div id="proceed-div">
+        <a href="/order/review/" class="btn btn-lg btn-success">Proceed</a>
+    </div>
+</div>
+{% endblock content %}
+
+
+{% block modal %}
+<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myLargeModalLabel">Add New Address</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-control">
+                    <label for="company">Company</label>
+                    <input id="company" name="company" class="form-control create-addr-form" type="text">
+                </div>
+                <div class="form-control">
+                    <label for="street">Street</label>
+                    <input id="street" name="street" class="form-control create-addr-form" type="text">
+                </div>
+
+                <div class="row m-0">
+                    <div class="col-md-4 form-control">
+                        <label for="house_number">House Number</label>
+                        <input id="house_number" name="house_number" class="form-control create-addr-form" type="text">
+                    </div>
+                    <div class="col-md-4 form-control">
+                        <label for="zip_code">Zip Code</label>
+                        <input id="zip_code" name="zip_code" class="form-control create-addr-form" type="text">
+                    </div>
+                    <div class="col-md-4 form-control">
+                        <label for="city">City</label>
+                        <input id="city" name="city" class="form-control create-addr-form" type="text">
+                    </div>
+                </div>
+                <div class="form-control">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="phonePrefix">Phone Prefix</label>
+                            <input class="form-control create-addr-form" name="phonePrefix" type="text"
+                                id="phonePrefix">
+                        </div>
+                        <div class="col-md-8">
+                            <label for="phoneNumber">Phone Number</label>
+                            <input type="text" name="phoneNumber" class="form-control create-addr-form"
+                                id="phoneNumber">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="create-address" class="btn btn-primary">Create</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock modal %}
+
+
+{% block extrajs %}
+<script>
+
+    var csrftoken = "{{csrf_token}}";
+
+    $('#create-address').click(function (e) {
+        data = {}
+        $('.create-addr-form').each(function (e) {
+            data[$(this).attr('name')] = $(this).val()
+        })
+        $.ajax({
+            url: "/api/create_address/",
+            method: 'POST',
+            data: data,
+            beforeSend: function (xhr, settings) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            },
+            success: function (e) {
+                console.log(e)
+                var opt = document.createElement('option')
+                $(opt).val(e.adr_id)
+                $(opt).html(e.adr_name)
+
+                $('.address-form').append(opt)
+                $('.modal').modal('hide')
+            }
+        })
+    })
+
+    $('.address-form').click(function () {
+        this_id = $(this).data('type')
+        $.ajax({
+            url: '/api/select_address/',
+            method: 'POST',
+            beforeSend: function (xhr, settings) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            },
+            data: {
+                'id': $(this).val(), 
+                'type': this_id
+            },
+            success: function (e) {
+                console.log(e)
+                text = ` \
+                    <h2 style="text-transform: capitalize;" >${this_id} Address</h2> \
+                    <p><span class="address_head">Street: </span>${e.street}</p> \
+                    <p><span class="address_head">House number: </span>${e.houseNumber}</p>\
+                    <p><span class="address_head">Post Code: </span>${e.postcode}</p>\
+                    <p><span class="address_head">City: </span>${e.city}</p>\
+                    <p><span class="address_head">Company: </span>${e.company}</p>\
+                    <p><span class="address_head">Phone Number: </span>${e.phonePrefix} ${e.phoneNumber}</p>\
+                `;
+                id = '#'+this_id+ '_detail';
+                console.log(id)
+                $(id).empty();
+                $(id).append(text);
+            }
+        })
+    })
+
+</script>
+{% endblock extrajs %}

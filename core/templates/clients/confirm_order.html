@@ -1,57 +1,106 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block extrastyle %}
-<link rel="stylesheet" href="{% static 'assets/dropzone/dropzone.css' %}">
-{% endblock extrastyle %}
-
 {% block content %}
-<div class="container text-xs-center">
-    <div id="myId" class="dropzone"></div>
-    <form id="form" method="POST" >
-        {% csrf_token %}
-        <button type="submit" class="btn btn-success my-5" >Place Order</button>
-    </form>
+<div class="container">
+    <div id="siginin">
+        <h2>Sign In</h2>
+        <form method="POST" class="form-inline">
+            <input type="hidden" name="mode" value="signin">
+            {% csrf_token %}
+            <div class="form-group mb-2">
+                <label for="staticEmail2" class="sr-only">Email</label>
+                <input name="email" type="text" class="form-control-plaintext" id="staticEmail2">
+            </div>
+            <div class="form-group mx-sm-3 mb-2">
+                <label for="inputPassword2" class="sr-only">Password</label>
+                <input name="password" type="password" class="form-control" id="inputPassword2">
+            </div>
+            <button type="submit" class="btn btn-primary mb-2">Confirm identity</button>
+        </form>
+    </div>
+    <div id="register">
+        <h2>Sign Up</h2>
+        <div class="row">
+            <div class="col-md-8 order-md-1">
+                <form method="POST">
+                    <input type="hidden" name="mode" value="register">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="email">Email</label>
+                        <input name="email" type="email" class="form-control" id="email" placeholder="you@example.com">
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="password">Password</label>
+                            <input name="password" type="password" class="form-control">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="password-confirm">Confirm Passwrod</label>
+                            <input name="password1" type="password" name="" class="form-control" id="">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2 mb-3">
+                            <label for="salutation">Salutation</label>
+                            <select class="form-control" name="salutation" id="salutation">
+                                <option value="Mr">Mr</option>
+                                <option value="Mrs.">Mrs.</option>
+                            </select>
+                        </div>
+                        <div class="col-md-5 mb-3">
+                            <label for="firstName">First name</label>
+                            <input name="first_name" type="text" class="form-control" id="firstName" required>
+                        </div>
+                        <div class="col-md-5 mb-3">
+                            <label for="lastName">Last name</label>
+                            <input name="last_name" type="text" class="form-control" id="lastName" required>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="address">Street</label>
+                        <input type="text" name="street" class="form-control" id="address" placeholder="1234 Main St"
+                            required>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-5 mb-3">
+                            <label for="country">House Number</label>
+                            <input type="text" name="house_number" class="form-control" id="zip" required>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="state">Zip Code</label>
+                            <input type="text" name="zip_code" class="form-control" id="zip" required>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label for="zip">City</label>
+                            <input type="text" name="city" class="form-control" id="zip" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="company">Company</label>
+                            <input type="text" name="company" class="form-control" id="company" required>
+                        </div>
+                        <div class="col-md-2">
+                            <label for="phone_prefix">Phone Prefix</label>
+                            <input type="text" name="phone_prefix" class="form-control" name="" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="phone_number">Phone Number</label>
+                            <input type="text" name="phone_number" class="form-control" required>
+                        </div>
+                    </div>
+                    <hr class="mb-4">
+                    <hr class="mb-4">
+                    <button class="btn btn-primary btn-lg btn-block" type="submit">Continue to checkout</button>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock content %}
 
 
 {% block extrajs %}
-<script src="{% static 'assets/dropzone/dropzone.js' %}"></script>
-<script>
-    var csrftoken = "{{csrf}}";
-    var drop = $("div#myId").dropzone({
-        dictDefaultMessage: "Upload your digital content here",
-        paramName: "file",
-        url: '/api/file_upload/',
-        addRemoveLinks: true,
-        maxFiles: 1,
-        headers: {
-            'X-CSRFToken': csrftoken
-        },
-        success: function (e) {
-            file = e.xhr.responseText
-            hid_input = document.createElement('input')
-            $(hid_input).attr('type', 'hidden')
-            $(hid_input).attr('name','uploaded_file')
-            $(hid_input).addClass('hid_input')
-            $(hid_input).val(file)
-            $('#form').append(hid_input)
-        },
-        removedfile: function(file){
-            $('.hid_input').remove()
-            var _ref;
-            return (_ref = file.previewElement) != null ? _ref.parentNode.removeChild(file.previewElement) : void 0;   
-        }
-    });
 
-
-    drop.on("addedfile", function (file) {
-        file.previewElement.addEventListener("click", function () {
-            myDropzone.removeFile(file);
-        });
-    });
-
-
-</script>
 {% endblock extrajs %}

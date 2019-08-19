@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% load wagtailimages_tags formfilter %}
+
+{% block content %}
+<!-- oldTODO make the order button functionable -->
+<div class="container">
+    <div class="row">
+        <div id="price-div">
+            <div class="cart-product-price">
+                <div class="price-grid">
+                    <p class="price-net-p">Total Price Net: <span class="price">${{total_price_net}}</span></p>
+                </div>
+                <div class="price-grid">
+                    <p class="price-net-p">Total Price Gross: <span class="price">${{total_price_gross}}</span></p>
+                </div>
+                <div class="price-grid">
+                    <p class="price-net-p">Total Shipping Net: <span class="price">${{total_shipping_net}}</span></p>
+                </div>
+                <div class="price-grid">
+                    <p class="price-net-p">Total Shipping Gross: <span class="price">${{total_shipping_gross}}</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div id="order-btn">
+            <a href="/order/list/" id="confirm-order-btn" class="btn btn-success btn-lg">Checkout</a>
+        </div>
+        {% for item in items  %}
+        <div class="col-sm-12">
+            <div class="cart-product">
+                <div class="cart-product-head">
+                    {% image item.page.image fill-200x150 as img %}
+                    <img src="{{img.url}}" alt="{{img.alt}}">
+                    <h3 class="cart-product-title">{{item.page.name}}</h3>
+                </div>
+                <div class="cart-product-body ">
+                    {% for key,val in item.detail.items  %}
+                    <div class="property">
+                        <div class="field">
+                            {{key|refine_name}}
+                        </div>
+                        <div class="value">
+                            {{val}}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                <div class="cart-product-price">
+                    <div class="price-grid">
+                        <p class="price-net-p">Price Net: <span class="price">${{item.item.price_net}}</span></p>
+                    </div>
+                    <div class="price-grid">
+                        <p class="price-net-p">Price Gross: <span class="price">${{item.item.price_gross}}</span></p>
+                    </div>
+                    <div class="price-grid">
+                        <p class="price-net-p">Shipping Net: <span class="price">${{item.item.shipping_net}}</span></p>
+                    </div>
+                    <div class="price-grid">
+                        <p class="price-net-p">Shipping Gross: <span class="price">${{item.item.shipping_gross}}</span>
+                        </p>
+                    </div>
+                </div>
+                <div class="cart-product-btn">
+                    <a href="/upload/{{item.item.pk}}/" class="btn btn-info" role="button">Upload</a>
+                    <button class="btn btn-primary edit-cart">Edit</button>
+                    <button data-item="{{item.item.pk}}" class="btn btn-danger remove-cart">Remove</button>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock content %}
+
+{% block modal %}
+<div id="remove-confirm-modal" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Remove Item</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure?</p>
+            </div>
+            <div class="modal-footer">
+                <button data-csrf="{{csrf}}" id="remove-confirm" type="button" class="btn btn-primary">Yes</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock modal %}

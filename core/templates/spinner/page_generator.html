@@ -1,0 +1,163 @@
+{% extends "wagtailadmin/home.html" %}
+{% load wagtailadmin_tags static i18n %}
+{% block extra_css %}
+<style>
+    /*! CSS Used from: https://getbootstrap.com/docs/4.3/dist/css/bootstrap.min.css */
+    *,
+    ::after,
+    ::before {
+        box-sizing: border-box;
+    }
+
+    table {
+        border-collapse: collapse;
+    }
+
+    th {
+        text-align: inherit;
+    }
+
+    .table {
+        width: 100%;
+        margin-bottom: 1rem;
+        color: #212529;
+    }
+
+    .table td,
+    .table th {
+        padding: .75rem;
+        vertical-align: top;
+        border-top: 1px solid #dee2e6;
+    }
+
+    .table thead th {
+        vertical-align: bottom;
+        border-bottom: 2px solid #dee2e6;
+    }
+
+    @media print {
+
+        *,
+        ::after,
+        ::before {
+            text-shadow: none !important;
+            box-shadow: none !important;
+        }
+
+        thead {
+            display: table-header-group;
+        }
+
+        tr {
+            page-break-inside: avoid;
+        }
+
+        .table {
+            border-collapse: collapse !important;
+        }
+
+        .table td,
+        .table th {
+            background-color: #fff !important;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<header class="merged nice-padding">
+    <div class="row row-flush">
+        <div class="col6">
+            <h1>Page Spinner</h1>
+            <h2>Total: {{count}}</h2>
+            
+            {% for x,y in params.items %}
+                <p>{{x}}: {{y}}</p>
+            {% endfor %}
+            <form method="POST" action="/admin/create_batch/">
+                {% csrf_token %}
+                    <input type="hidden" name="count" value={{count}}>
+                {% for x,y in hidden_fields.items  %}
+                    <input type="hidden" name="{{x}}" value="y">
+                {% endfor %}
+                <button class="button bicolor icon icon-plus" type="submit">Create Batch</button>
+                    
+            </form>
+        </div>
+        <div class="col6">
+            {% if has_prev %}
+            <a class="button bicolor icon icon-arrow-up" href="/admin/spinner/{{1}}/">First</a>
+            <a class="button bicolor icon icon-arrow-left" href="/admin/spinner/{{prev_page}}/">Prev</a>
+            {% endif %}
+            {% if has_next %}
+            <a class="button bicolor icon icon-arrow-right" href="/admin/spinner/{{next_page}}/">Next</a>
+            <a class="button bicolor icon icon-arrow-down" href="/admin/spinner/{{num_page}}/">Last</a>
+            {% endif %}
+        </div>
+    </div>
+</header>
+
+<main>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Name</th>
+                <th scope="col">Area Type</th>
+                <th scope="col">Parent Country</th>
+                <th scope="col">Parent County</th>
+                <th scope="col">Url</th>
+            </tr>
+            <tr>
+                <form method="POST" action="">
+                    {% csrf_token %}
+                    <th scope="col">#</th>
+                    <th scope="col">
+                        <input name="name__startswith" type="text">
+                    </th>
+                    <th scope="col">
+                        <select name="area_type" id="">
+                            <option value="" selected>____</option>
+                            <option value="country">Country</option>
+                            <option value="county">County</option>
+                            <option value="town">Town</option>
+                        </select></th>
+                    <th scope="col">
+                        <select name="parent_country" id="">
+                            <option value="" selected>___</option>
+                            {% for country in  countries %}
+                            <option value="{{country.pk}}">{{country.name}}</option>
+                            {% endfor %}
+                        </select>
+                    </th>
+                    <th scope="col">
+                        <select name="parent_county">
+                            <option value="" selected>___</option>
+                            {% for county in counties  %}
+                                <option value="{{county.pk}}">{{county.name}}</option>
+                            {% endfor %}
+                        </select>
+                    </th>
+                    <th scope="col">
+                        <button class="button bicolor">Submit</button>
+                    </th>
+                </form>
+            </tr>
+        </thead>
+        <tbody>
+            {% for page in pages %}
+            <tr>
+                <th scope="row">{{page.self.pk}}</th>
+                <td>{{page.self.name}}</td>
+                <td>{{page.self.area_type}}</td>
+                <td>{{page.country.name}}</td>
+                <td>{{page.county.name}}</td>
+                <td></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</main>
+{% endblock content %}
+
+{% block extra_js %}{% endblock %}

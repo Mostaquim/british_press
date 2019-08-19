@@ -10,8 +10,10 @@ from wagtail.documents import urls as wagtaildocs_urls
 from search import views as search_views
 
 from api import urls as api_urls
-from clients.views import confirm_order
+from ordercart import urls as order_urls
+from clients.views import cart_page, upload_view, login_signup
 from formpage.views import test_form
+from spinner import urls as spinner_urls
 
 urlpatterns = [
     url(r'^django-admin/', admin.site.urls),
@@ -21,14 +23,17 @@ urlpatterns = [
 
     url(r'^search/$', search_views.search, name='search'),
 
-    path('confirm_order/<int:pk>',confirm_order, name='confirm_order'),
-    path('test/', test_form),
+    path('cart/', cart_page),
+    path('login_signup/',login_signup),
+    path('order/', include(order_urls)),
+
+
     # For anything not caught by a more specific rule above, hand over to
     # Wagtail's page serving mechanism. This should be the last pattern in
     # the list:
+    path('upload/<int:item_id>/', upload_view, name='upload_view'),
     url(r'^api/', include(api_urls)),
     url(r'', include(wagtail_urls)),
-
     # Alternatively, if you want Wagtail pages to be served from a subpath
     # of your site, rather than the site root:
     #    url(r'^pages/', include(wagtail_urls)),

@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load formfilter %}
+
+{% block content %}
+<div class="container">
+    <div id="order-header">
+        <span class="order-header__breadcrumb oder-header__breadcrumb-active">Your Order</span><span class="order-header__breadcrumb">Delivery Options</span><span class="order-header__breadcrumb">Review</span><span class="order-header__breadcrumb">Checkout</span><span class="order-header__breadcrumb">Complete</span>
+    </div>
+    <table class="table">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">Order ID</th>
+                <th scope="col">Product</th>
+                <th scope="col">Quantity</th>
+                <th scope="col">Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in items  %}
+            <tr>
+                <th scope="row">{{item.id}}</th>
+                <td>
+                    <div class="item-props">
+                        {% for key, val in item.props.items  %}
+                        <div class="item-product">
+                            <div class="item-prop">{{key|refine_name}}</div>
+                            <div class="item-val">{{val}}</div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </td>
+                <td>{{item.quantity}}</td>
+                <td>{{item.price}}</td>
+            </tr>
+            {% endfor %}
+
+        </tbody>
+    </table>
+
+    <div id="proceed-div">
+        <a href="/order/delivery/" class="btn btn-lg btn-success">Proceed</a>
+    </div>
+</div>
+{% endblock content %}

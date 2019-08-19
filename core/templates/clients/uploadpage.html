@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+
+<!-- oldTODO FINE finish up uploadpage  template -->
+<!-- api to recieve uploaded file -->
+<!-- have multiple files -->
+<!-- BACKEND proofing -->
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12">
+            <h1>Upload Your Artworks</h1>
+            <form id="upload_form" enctype="multipart/form-data" action="">
+                <input type="file" name="upload" id="upload">
+            </form>
+        </div>
+        <div class="col-sm-12">
+            <div id="uploaded_files">
+                {% for file in  item.files.all %}
+                <div class="uploaded_file">
+                    <p class="file-name">{{file.name}}</p>
+                    <button data-id="{{file.pk}}" type="button" class="file-remove close" aria-label="Close">
+                        <span class="sr-only">Remove</span>
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+
+{% block extrajs %}
+<script>
+    // oldTODO FINE create the javascript frontend 
+    // @ will upload the file to the backend
+    // @ will show progress bar
+    // @ show names and size
+
+    var csrftoken = "{{csrf}}";
+    var item_id = "{{item.pk}}";
+
+    $('.file-remove').click(function () {
+        remove_file($(this).data('id'))
+        $(this).closest('.uploaded_file').remove()
+    })
+
+    $('#upload').change(function (e) {
+        uploadFile(this.files[0]);
+    })
+
+    // oldTODO FINE create progress bar 
+    // @ refresh input file
+
+    function uploadFile(file) {
+        var formData = new FormData();
+        formData.append('formData', file);
+        formData.append('item', item_id);
+
+        $.ajax({
+            url: '/api/upload_design/',  
+            data: formData,
+            method: 'POST',
+            beforeSend: function (xhr, settings) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            },
+            contentType: false,
+            processData: false,
+            // oldTODO LATER Ajax events
+            success: function (e) {
+                console.log(e);
+                var div = document.createElement('div');
+                div.className = 'uploaded_file';
+                var p = document.createElement('p');
+                p.className = 'file-name';
+                p.innerHTML = e.file_name;
+                $(div).append(p);
+                var button = document.createElement('button');
+                button.className = 'file-remove close';
+                $(button).data('id', e.file_id);
+                $(button).append('<span aria-hidden="true">&times;</span>');
+                $(button).click(function () {
+                    remove_file($(this).data('id'));
+                    $(this).closest('.uploaded_file').remove();
+                })
+                $(div).append(button);
+
+                $('#uploaded_files').append(div);
+                $('#upload').val("")
+            }
+        });
+    }
+
+    // oldTODO FINE MAKE RECIEVE BACKEND
+    function remove_file(id) {
+        $.ajax({
+            url: '/api/remove_file/',
+            data: {
+                'item_id': item_id,
+                'file_id': id
+            },
+            method: 'POST',
+            beforeSend: function (xhr, settings) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            },
+            success: function (e) {
+                console.log(e);
+            }
+        })
+    }
+</script>
+{% endblock extrajs %}

@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+
+{% load wagtailimages_tags static formfilter %}
+{% block content %}
+
+<div class="container">
+  {% image self.image fill-400x300 as img %}
+  <div class="row bg-white pt-1 pb-3">
+    <div class="col-sm-12 col-md-4">
+      <div id="orientation">
+        <button id="portrait" class="btn orientation-btn oreintaiton__active">Portrait</button>
+        <button id="landscape" class="btn orientation-btn">Landscape</button>
+      </div>
+      <div id="paper-sizes">
+        {% for format in formats  %}
+        {% if format.name %}
+        <div class="paper-size {% if format.selected == True %}selected{% endif %}" data-option="{{format.optionName}}"
+          data-w="{{format.dimension.w}}" data-h="{{format.dimension.h}}"
+          style="width: {{format.dimension.w}}px; height: {{format.dimension.h}}px; ">
+          {{format.name}}
+        </div>
+        {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+    <div class="col-sm-12 col-md-8 d-flex flex-column">
+      <h1 id='catalogpage-h1' class="text-uppercase">{{self.name}}</h1>
+      <div id="catalog-desc">
+        <h2 id="catalogpage-h2">{{self.list_header}}</h2>
+        <ul id="catalogpage-ul">
+          {% for l in self.list_item.all %}
+          <li class="catalogpage-li">{{l.text}}</li>
+          {% endfor %}
+        </ul>
+      </div>
+      <div id="catalog-form">
+        {% for select in select_group  %}
+        {% if select.selectName != 'product' %}
+        <div class="form-group row">
+          <label class="col-sm-2" for="{{select.selectName}}">{{select.selectDescription|refine_name}}</label>
+          <div class="col-sm-10 form-with-icon">
+            <select class="form-control catalog-form" id="{{select.selectName}}" name="{{select.selectName}}">
+              {% for option in select.optionList  %}
+              <option value="{{ option.optionName }}" {% if option.selected  %}selected="True" {% endif %}>
+                {{option.optionTranslations|array_filter}}</option>
+              {% endfor %}
+            </select>
+            <img src="/static/assets/images/loader.gif" class="form-icons loading-icon">
+            <img src="/static/assets/images/cross.png" class="form-icons error-icon">
+            <img src="/static/assets/images/tick.png" class="form-icons valid-icon">
+            <img src="/static/assets/images/caution.png" class="form-icons caution-icon">
+          </div>
+        </div>
+        {% endif %}
+        {% endfor %}
+      </div>
+      <div id="prices">
+        <div class="price-grid">
+          <p id="price-net-p">Net Price: <span class="price">${{selected.priceNet}}</span></p>
+        </div>
+        <div class="price-grid">
+          <p id="price-gross-p">Gross Price: <span class="price">${{selected.priceGross}}</span></p>
+        </div>
+        <div class="price-grid">
+          <p id="shipping-net-p">Shipping Net: <span class="price">${{selected.shippingGross}}</span></p>
+        </div>
+        <div class="price-grid">
+          <p id="shipping-gross-p">Shipping Gross: <span class="price">${{selected.shippingNet}}</span></p>
+        </div>
+      </div>
+      <button id="cart-button" class="btn btn-lg btn-primary btn-block">Add To Cart</button>
+    </div>
+  </div>
+</div>
+{% endblock content %}
+{% block extrajs %}
+<script>
+  var product_value = "{{product_api_code}}";
+  var csrftoken = "{{csrf}}";
+  var priceNet = "{{selected.priceNet}}";
+  var priceGross = "{{selected.priceGross}}";
+  var shippingNet = "{{selected.shippingNet}}";
+  var shippingGross = "{{selected.shippingGross}}";
+  var slug = "{{self.slug}}";
+</script>
+<script src="{% static 'js/catalog_flyers.js' %}"></script>
+{% endblock extrajs %}
+
+{% block modal %}
+<div class="modal fade" id="new-cart-modal" tabindex="-1" role="dialog" aria-labelledby="new-cart-modal-label"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="new-cart-modal-label">New Item Added to the cart</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <h3>{{self.name}}</h3>
+        <div id="product-cart-detail">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <a role="button" href="/cart/" class="btn btn-primary">View Cart</a>
+        <button type="button" class="btn btn-success" data-dismiss="modal">Upload Items</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock modal %}

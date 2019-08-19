@@ -1,52 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
+import os
 # Create your models here.
-
-
-class OrderManager(models.Manager):
-    def create_new_order(
-        self,
-        email,  first_name, last_name, salutation, phone_prefix,
-        company, house_number, street, zip_code, city,
-        phone_number, item_id, comment
-    ):
-        user_filter = User.objects.filter(username=email)
-        if user_filter.exists():
-            user = user_filter[0]
-            client = user.clients
-        else:
-            user = User(
-                email=email,
-                username=email,
-                password=None,
-                first_name=first_name,
-                last_name=last_name
-            )
-            user.set_password(None)
-            user.save()
-            client = Clients(
-                user=user,
-                company=company,
-                salutation=salutation,
-                phone_number=phone_number,
-                phone_prefix=phone_prefix,
-                house_number=house_number,
-                zip_code=zip_code,
-                city=city,
-                street=street
-            )
-            client.save()
-
-        order = Orders(
-            client=client,
-            item_id=item_id,
-            order_confirmed=False,
-            order_id=None,
-            comment=comment
-        )
-
-        order.save()
-        return order
 
 
 class Clients(models.Model):
@@ -61,12 +16,40 @@ class Clients(models.Model):
     house_number = models.CharField(max_length=255, null=True)
 
 
-class Orders(models.Model):
-    client = models.ForeignKey(Clients, on_delete=models.CASCADE)
-    item_id = models.CharField(max_length=255, null=True)
-    order_confirmed = models.BooleanField()
-    order_id = models.CharField(max_length=255, null=True)
-    data = models.TextField(null=True)
-    comment = models.TextField(null=True)
+class CartItems(models.Model):
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    slug = models.CharField(null=True, max_length=255)
+    data_vals = models.TextField(null=True)
+    data_name = models.TextField(null=True)
+    price_net = models.FloatField(null=True)
+    price_gross = models.FloatField(null=True)
+    shipping_net = models.FloatField(null=True)
+    shipping_gross = models.FloatField(null=True)
+    date = models.DateTimeField(auto_now_add=True, null=True)
 
-    objects = OrderManager()
+
+class UploadedFile(models.Model):
+    """
+    oldTODO FINE build the uploaded file model
+    name -> uploaded file name
+    saved_name -> saved name on disk
+    """
+    name = models.CharField(max_length=255, null=True)
+    saved_name = models.CharField(max_length=255, null=True)
+    saved_path = models.CharField(max_length=500, null=True)
+    file_type = models.CharField(max_length=255, null=True)
+    cart_item = models.ForeignKey(
+        CartItems,
+        on_delete=models.SET_NULL,
+        related_name='files',
+        null=True
+    )
+
+    date = models.DateTimeField(auto_now_add=True, null=True)
+
+    def delete(self):
+        try:
+            os.remove(self.saved_path)
+        except:
+            pass
+        super(UploadedFile, self).delete()

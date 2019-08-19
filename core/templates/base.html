@@ -13,6 +13,7 @@
 </head>
 
 <body>
+    <div id="ajax-loader" class="loading">Loading&#8230;</div>
     <header>
         <div id="top-head">
             <div class="container">
@@ -24,6 +25,9 @@
                         <a href="" class="top-head-a">Home</a>
                         <a href="" class="top-head-a">About Us</a>
                         <a href="" class="top-head-a">Contact Us</a>
+                        <a href="/cart/" id="cart">
+                            <span class="icon icon-shopping-cart"></span><span
+                                id="cart-number">{{request.CART.count}}</span></a>
                     </div>
                 </nav>
             </div>
@@ -42,7 +46,7 @@
         <div id="product-head">
             <div class="container d-flex justify-content-between">
                 {% for product in settings.sitesettings.NavbarSetting.products %}
-                    {{product}}
+                {{product}}
                 {% endfor %}
             </div>
         </div>
@@ -55,7 +59,7 @@
         <div class="block block-inverse app-footer">
             <div class="container">
                 <div class="row">
-                    
+
                 </div>
             </div>
         </div>

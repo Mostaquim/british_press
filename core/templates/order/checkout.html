@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+<div class="container">
+    <div id="order-header">
+        <span class="order-header__breadcrumb ">Your Order</span><span class="order-header__breadcrumb">Delivery Options</span><span class="order-header__breadcrumb">Review</span><span class="order-header__breadcrumb oder-header__breadcrumb-active">Checkout</span><span class="order-header__breadcrumb">Complete</span>
+    </div>
+    <div id="address-div">
+        <!-- oldTODO get order form api here -->
+    </div>
+    <div id="proceed-div">
+        <a href="/order/complete/" class="btn btn-lg btn-success">Proceed</a>
+    </div>
+</div>
+{% endblock content %}

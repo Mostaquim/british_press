@@ -1,0 +1,80 @@
+{% extends "wagtailadmin/home.html" %}
+{% load wagtailadmin_tags static i18n %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'admin/article.css' %}">
+<script src="{% static 'tinymce/tinymce.min.js' %}"></script>
+{% endblock extra_css%}
+
+{% block content %}
+
+<header class="merged nice-padding">
+    <div class="row row-flush">
+        <div class="col6">
+            <h1>Page Spinner</h1>
+            <h2>Article {{article.name}}</h2>
+        </div>
+    </div>
+</header>
+
+<main>
+    <div class="col8">
+        <form method="POST" action="">
+            {% csrf_token %}
+
+            <div id="articlename">
+                <label for="name">Article Name</label>
+                <input type="text" id="name" name="name" value="{{article.name}}">
+            </div>
+            <div style="margin:30px 0">
+                <textarea name="content" id="content">{{article.content|safe}}</textarea>
+            </div>
+            <input type="submit" value="Save" class="button">
+        </form>
+
+    </div>
+    <div style="margin-top: 10px" class="col4">
+        <button id="article_content_add_synoms" class="button bicolor icon icon-plus">Add New Synoms</button>
+
+        <div id="edit-modal-add-init">
+            <p>Insert the word to replace (must be in the article)</p>
+            <p id="edit-modal-add-init-alert">Not found in article</p>
+            <input id="target-word-inp" type="text" placeholder="Word to replace">
+            <button class="btn btn-sm btn-success" id="add-target-word">ADD</button>
+            <button class="btn btn-sm btn-danger close-btn" data-dismiss="#edit-modal-add-init">Close</button>
+        </div>
+
+        <div id="edit-modal-syns" style="display: none;">
+            <div id="current-ones">
+                <div class="current-one-single" contenteditable="true">seriously</div>
+                <div class="current-one-single" contenteditable="true">earnestly</div>
+            </div>
+            <div id="edit-modal-input-div">
+                <input type="text" id="edit-modal-input">
+                <button class="btn btn-sm btn-outline-primary" id="input-modal-add">Add</button>
+            </div>
+            <button class="btn btn-sm btn-success" id="edit-modal-save">Save</button>
+            <button class="btn btn-sm btn-danger" id="edit-modal-cancel">Cancel</button>
+        </div>
+
+        <div style="margin-top: 10px" id="article-synoms-div">
+            {% for synom in synoms %}
+            <ul class="article-synoms" id="ul-{{forloop.counter}}" data-syns="{{synom.raw}}">
+                {% for word in synom.array %}
+                <li class="syn-word">{{word}}</li>
+                {% endfor %}
+                <li class="edit-syns"><button data-text="{{synom.raw}}" data-id="{{forloop.counter}}"
+                        class="edit_synoms_btn">+</button></li>
+            </ul>
+            {% endfor %}
+        </div>
+    </div>
+</main>
+
+{% endblock content %}
+
+{% block extra_js %}
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"
+    integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+<script src="{% static 'admin/article.js' %}"></script>
+{% endblock %}

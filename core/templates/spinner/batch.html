@@ -1,0 +1,47 @@
+{% extends "wagtailadmin/home.html" %}
+{% load wagtailadmin_tags static i18n %}
+
+
+{% block content %}
+<header class="merged nice-padding">
+    <div class="row row-flush">
+        <div class="col6">
+            <h1>Batches</h1>
+        </div>
+    </div>
+</header>
+
+<main>
+    <table class="listing">
+        <thead>
+            <tr>
+                <th class="name">
+
+                    <a href="/admin/users/?ordering=name" class="icon icon-arrow-down-after">
+                        Name
+                    </a>
+
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for batch in batches  %}
+            <tr>
+                <td class="title" valign="top">
+                    <h2>
+                        <span class="avatar small"><img
+                                src="//www.gravatar.com/avatar/0eb178cec364c022a189c3814e5f7483?s=50&amp;d=mm"></span>
+                        <a href="/admin/batch/{{batch.pk}}/">{{batch.name}}</a>
+                    </h2>
+                    <ul class="actions">
+                        <li><a class="button button-secondary button-small no"
+                                href="/admin/batch/{{batch.pk}}/delete/" title="Delete this Article">Delete</a></li>
+                    </ul>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</main>
+
+{% endblock content %}

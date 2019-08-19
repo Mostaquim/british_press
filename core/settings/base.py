@@ -32,7 +32,10 @@ INSTALLED_APPS = [
     'flexpage',
     'api',
     'clients', 
+    'ordercart',
     'sitesettings', 
+    'spinner',
+    
     'wagtail.contrib.forms',
     'wagtail.contrib.redirects',
     'wagtail.contrib.settings',
@@ -65,6 +68,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'wagtail.core.middleware.SiteMiddleware',
     'wagtail.contrib.redirects.middleware.RedirectMiddleware',
+    'clients.cart_middleware.CartMiddleware',
 ]
 
 ROOT_URLCONF = 'core.urls'
@@ -83,6 +87,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'wagtail.contrib.settings.context_processors.settings',
+                'clients.context_processor.cart_context',
             ],
         },
     },

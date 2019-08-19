@@ -1,0 +1,24 @@
+{% extends "wagtailadmin/home.html" %}
+{% load wagtailadmin_tags static i18n %}
+
+
+{% block content %}
+
+<header class="merged nice-padding">
+    <div class="row row-flush">
+        <div class="col6">
+            <h1>Delete article</h1>
+            <h2>Article {{article.name}}</h2>
+        </div>
+    </div>
+</header>
+<main>
+    <div class="nice-padding">
+        <form method="POST" action="">
+            {% csrf_token %}
+            <p>Are you sure?</p>
+            <button type="submit" name="Delete" value="true" class="button serious">Yes I'm Sure</button>
+        </form>
+    </div>
+</main>
+{% endblock content %}

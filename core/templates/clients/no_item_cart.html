@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load wagtailimages_tags %}
+
+{% block content %}
+<div class="container">
+    <div class="jumbotron">
+        <h1 class="display-4">There are no items in cart!</h1>
+        <hr class="my-4">
+        <p class="lead">
+            <a class="btn btn-primary btn-lg" href="/" role="button">Back To Home</a>
+        </p>
+    </div>
+
+    <div class="justify-content-between row my-2 mb-4">
+        {% for p in formpages %}
+        <div class="product-card card">
+            {% image p.image fill-400x300 as img %}
+            <img src="{{img.url}}" alt="{{img.alt}}" class="card-img-top">
+            <div class="card-body">
+                <h5 class="card-title">{{p.title}}</h5>
+                <p class="card-text">{{p.list_header}}</p>
+            </div>
+            <a href="{{p.url}}" class="btn btn-primary product-card-btn">Browse</a>
+        </div>
+        {% if forloop.counter|divisibleby:3 %}
+    </div>
+    <div class="justify-content-between row my-2 mb-4">
+        {% endif %}
+        {% endfor %}
+    </div>
+
+</div>
+{% endblock content %}

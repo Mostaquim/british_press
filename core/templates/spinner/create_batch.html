@@ -1,0 +1,68 @@
+{% extends "wagtailadmin/home.html" %}
+{% load wagtailadmin_tags static i18n %}
+{% block extra_css %}
+<style>
+    ul.fields {
+        list-style: none;
+    }
+</style>
+{% endblock extra_css%}
+
+{% block content %}
+<header class="merged nice-padding">
+    <div class="row row-flush">
+        <div class="col6">
+            <h1>Page Spinner</h1>
+            <h2>Create Batch. Total Pages: {{count}}</h2>
+        </div>
+    </div>
+</header>
+<main>
+    <ul class="fields">
+        <form method="POST" action="/admin/batch/">
+            {% csrf_token %}
+            <input type="hidden" name="kwargs" value="{{kwargs}}">
+            <li class="required">
+                <div class="field char_field text_input">
+                    <label class="required" for="id_name">Batch Name:</label>
+                    <div class="field-content">
+                        <div class="input">
+                            <input type="text" name="name" maxlength="150" required="" id="id_name">
+                            <span></span>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li class="required">
+                <div class="field char_field text_input">
+                    <label class="required" for="number">Maximum Number of pages to Generate:</label>
+                    <div class="field-content">
+                        <div class="input">
+                            <input type="number" value="{{count}}" name="number" maxlength="150" required=""
+                                id="number">
+                            <span></span>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li class="required">
+                <div class="field char_field text_input">
+                    <label class="required" for="article">Article:</label>
+                    <div class="field-content">
+                        <div class="input">
+                            <select name="article" id="article">
+                                {% for article in articles %}
+                                <option value="{{article.pk}}">{{article.name}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li>
+                <input type="submit" value="Save" class="button">
+            </li>
+        </form>
+    </ul>
+</main>
+{% endblock content %}
